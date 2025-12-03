@@ -1,0 +1,9 @@
+# Logs
+node_modules/
+dist/
+.env
+.env.local
+server/chat.db
+.DS_Store
+*.log
+*.pyc __pycache__/
