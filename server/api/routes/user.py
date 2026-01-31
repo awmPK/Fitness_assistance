@@ -1,5 +1,5 @@
 """
-用户相关 API 路由
+用户相关 API 路由，用于获取用户信息、更新用户信息和修改用户密码
 """
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Dict
