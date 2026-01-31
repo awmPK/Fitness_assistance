@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ChatView from '@/views/ChatView.vue'
-import PlanView from '@/views/PlanView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 
 const routes = [
@@ -9,15 +8,7 @@ const routes = [
     name: 'Chat',
     component: ChatView,
     meta: {
-      title: 'AI健身助手 - 智能对话'
-    }
-  },
-  {
-    path: '/plans',
-    name: 'Plans',
-    component: PlanView,
-    meta: {
-      title: '训练计划 - 健身管理'
+      title: 'AI助手 - 智能对话'
     }
   },
   {
@@ -25,7 +16,7 @@ const routes = [
     name: 'Profile',
     component: ProfileView,
     meta: {
-      title: '个人中心 - 健身数据'
+      title: '个人中心'
     }
   },
   {
@@ -33,7 +24,7 @@ const routes = [
     name: 'Login',
     component: () => import('@/views/LoginView.vue'),
     meta: {
-      title: '登录 - Fitness AI'
+      title: '登录'
     }
   },
   {
@@ -41,15 +32,7 @@ const routes = [
     name: 'Register',
     component: () => import('@/views/RegisterView.vue'),
     meta: {
-      title: '注册 - Fitness AI'
-    }
-  },
-  {
-    path: '/plans/:id',
-    name: 'PlanDetail',
-    component: () => import('@/views/PlanDetailView.vue'),
-    meta: {
-      title: '计划详情 - 训练管理'
+      title: '注册'
     }
   }
 ]

@@ -1,0 +1,19 @@
+# Web Framework
+fastapi==0.115.14
+uvicorn==0.40.0
+
+# Environment & Configuration
+python-dotenv==1.2.1
+
+# Data Validation
+pydantic[email]==2.12.5
+
+# Authentication
+PyJWT==2.10.1
+
+# LLM Integration
+langchain-core==1.2.7
+langchain-openai==1.1.7
+
+# Memory System
+MemoryOS==2.0.3

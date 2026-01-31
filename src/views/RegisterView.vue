@@ -267,18 +267,16 @@ const handleRegister = async () => {
     await registerFormRef.value.validate()
     loading.value = true
     
-      await userStore.register({
+    await userStore.register({
         email: registerForm.email,
         password: registerForm.password,
         name: registerForm.name
       })
     
-    ElMessage.success('注册成功！正在跳转到登录页面...')
+    ElMessage.success('注册成功！')
     
-    // Redirect to login after successful registration
-    setTimeout(() => {
-      router.push('/login')
-    }, 1500)
+    // 注册成功后已自动登录，直接跳转到首页
+    router.push('/')
     
   } catch (error) {
     if (error !== false) {

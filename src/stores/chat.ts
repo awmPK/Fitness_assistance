@@ -254,8 +254,8 @@ export const useChatStore = defineStore('chat', () => {
     // Hydrate from localStorage
     hydrate() {
       const cid = localStorage.getItem('current_conversation_id')
-      const uid = localStorage.getItem('user_id') || 'fitness_user_123'
-      if (cid) {
+      const uid = localStorage.getItem('user_id')
+      if (cid && uid) {
         currentConversation.value = {
           conversation_id: cid,
           user_id: uid,

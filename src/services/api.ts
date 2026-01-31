@@ -4,8 +4,6 @@ import type {
   ChatResponse, 
   ApiResponse, 
   User, 
-  FitnessPlan, 
-  ProgressRecord,
   Conversation,
   Memory 
 } from '@/types'
@@ -23,7 +21,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Add auth token if available
-    const token = localStorage.getItem('auth_token')
+    const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -42,7 +40,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Handle unauthorized access
-      localStorage.removeItem('auth_token')
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
       window.location.href = '/login'
     }
     return Promise.reject(error)
@@ -87,46 +86,18 @@ export const userApi = {
   register: async (data: { email: string; password: string; name: string }): Promise<ApiResponse<{ user: User; token: string }>> => {
     const response = await api.post('/auth/register', data)
     return response.data
-  }
-}
+  },
 
-// Fitness Plan API
-export const planApi = {
-  getUserPlan: async (userId: string): Promise<ApiResponse<FitnessPlan>> => {
-    const response = await api.get(`/plan/${userId}`)
+  getCurrentUser: async (): Promise<ApiResponse<User>> => {
+    const response = await api.get('/auth/me')
     return response.data
   },
 
-  createPlan: async (data: Omit<FitnessPlan, 'plan_id'>): Promise<ApiResponse<FitnessPlan>> => {
-    const response = await api.post('/plan', data)
-    return response.data
-  },
-
-  updatePlan: async (planId: string, data: Partial<FitnessPlan>): Promise<ApiResponse<FitnessPlan>> => {
-    const response = await api.put(`/plan/${planId}`, data)
-    return response.data
-  },
-
-  deletePlan: async (planId: string): Promise<ApiResponse<void>> => {
-    const response = await api.delete(`/plan/${planId}`)
-    return response.data
-  }
-}
-
-// Progress API
-export const progressApi = {
-  getProgress: async (userId: string): Promise<ApiResponse<ProgressRecord[]>> => {
-    const response = await api.get(`/progress/${userId}`)
-    return response.data
-  },
-
-  createProgress: async (data: Omit<ProgressRecord, 'record_id'>): Promise<ApiResponse<ProgressRecord>> => {
-    const response = await api.post('/progress', data)
-    return response.data
-  },
-
-  updateProgress: async (recordId: string, data: Partial<ProgressRecord>): Promise<ApiResponse<ProgressRecord>> => {
-    const response = await api.put(`/progress/${recordId}`, data)
+  changePassword: async (userId: string, currentPassword: string, newPassword: string): Promise<ApiResponse<null>> => {
+    const response = await api.put(`/user/${userId}/password`, {
+      current_password: currentPassword,
+      new_password: newPassword
+    })
     return response.data
   }
 }

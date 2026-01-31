@@ -7,9 +7,7 @@
           <!-- Logo and Brand -->
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <div class="flex items-center justify-center w-8 h-8 bg-primary-600 rounded-lg">
-                <i class="el-icon-dumbbell text-white text-lg"></i>
-              </div>
+              <img src="/favicon.png" alt="Logo" class="w-8 h-8 rounded-lg shadow-sm" />
             </div>
             <div class="ml-3">
               <h1 class="text-xl font-bold text-gray-900">Fitness AI</h1>
@@ -26,14 +24,6 @@
               >
                 <i class="el-icon-chat-line-round mr-1"></i>
                 AI助手
-              </router-link>
-              <router-link
-                to="/plans"
-                class="px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                :class="$route.path === '/plans' ? 'bg-primary-100 text-primary-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'"
-              >
-                <i class="el-icon-document mr-1"></i>
-                训练计划
               </router-link>
               <router-link
                 to="/profile"
@@ -108,14 +98,6 @@
             AI助手
           </router-link>
           <router-link
-            to="/plans"
-            class="block px-3 py-2 rounded-md text-base font-medium transition-colors"
-            :class="$route.path === '/plans' ? 'bg-primary-100 text-primary-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'"
-          >
-            <i class="el-icon-document mr-2"></i>
-            训练计划
-          </router-link>
-          <router-link
             to="/profile"
             class="block px-3 py-2 rounded-md text-base font-medium transition-colors"
             :class="$route.path === '/profile' ? 'bg-primary-100 text-primary-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'"
@@ -142,14 +124,6 @@
         >
           <i class="el-icon-chat-line-round"></i>
           <span>AI助手</span>
-        </router-link>
-        <router-link
-          to="/plans"
-          class="mobile-nav-item"
-          :class="{ active: $route.path === '/plans' }"
-        >
-          <i class="el-icon-document"></i>
-          <span>训练计划</span>
         </router-link>
         <router-link
           to="/profile"

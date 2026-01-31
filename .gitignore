@@ -4,6 +4,10 @@ dist/
 .env
 .env.local
 server/chat.db
+server/.memos
+.memos
+server/config/.env
 .DS_Store
 *.log
-*.pyc __pycache__/
+*.pyc
+**/__pycache__/

@@ -10,7 +10,6 @@ import './styles/responsive.css'
 // Import stores
 import { useUserStore } from './stores/user'
 import { useChatStore } from './stores/chat'
-import { useFitnessStore } from './stores/fitness'
 import { useVoiceStore } from './stores/voice'
 import { useMemoryStore } from './stores/memory'
 import { useThemeStore } from './stores/theme'
@@ -40,7 +39,6 @@ app.use(ElementPlus)
 // Initialize stores
 const userStore = useUserStore()
 const chatStore = useChatStore()
-const fitnessStore = useFitnessStore()
 const voiceStore = useVoiceStore()
 const memoryStore = useMemoryStore()
 const themeStore = useThemeStore()
@@ -52,11 +50,6 @@ async function initializeApp() {
     const token = localStorage.getItem('token')
     if (token) {
       await userStore.loadUser()
-      await Promise.all([
-        fitnessStore.loadPlans(),
-        fitnessStore.loadActivities(),
-        fitnessStore.loadAchievements()
-      ])
     }
     
     // Load settings

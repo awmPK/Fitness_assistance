@@ -214,9 +214,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useChatStore } from '@/stores/chat'
+import { useUserStore } from '@/stores/user'
 import ChatMessage from '@/components/Chat/ChatMessage.vue'
 import ChatInput from '@/components/Chat/ChatInput.vue'
 import { Avatar, Memo, Plus, Setting, Loading } from '@element-plus/icons-vue'
@@ -224,6 +225,10 @@ import { chatApi } from '@/services/api'
 
 // Store
 const chatStore = useChatStore()
+const userStore = useUserStore()
+
+// 从 userStore 获取实际用户ID
+const userId = computed(() => userStore.user?.user_id || localStorage.getItem('user_id') || '')
 
 // Refs
 const messagesContainer = ref<HTMLElement>()
@@ -237,12 +242,13 @@ const voiceLanguage = ref('zh-CN')
 const enableVoiceReply = ref(false)
 const enableMemory = ref(true)
 
-// Mock user ID - in real app this would come from auth
-const userId = 'fitness_user_123'
-
 // Methods
 const startNewConversation = () => {
-  chatStore.startNewConversation(userId)
+  if (!userId.value) {
+    ElMessage.error('请先登录')
+    return
+  }
+  chatStore.startNewConversation(userId.value)
   ElMessage.success('开始新的对话')
   loadConversations()
 }
@@ -251,7 +257,7 @@ const selectConversation = async (conv: { conversation_id: string; title: string
   console.log('selectConversation clicked', conv)
   chatStore.loadConversation({
     conversation_id: conv.conversation_id,
-    user_id: userId,
+    user_id: userId.value,
     title: conv.title,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -279,8 +285,9 @@ const selectConversation = async (conv: { conversation_id: string; title: string
 }
 
 const loadConversations = async () => {
+  if (!userId.value) return
   try {
-    const res = await chatApi.getConversations(userId)
+    const res = await chatApi.getConversations(userId.value)
     if (res.success) {
       conversations.value = (res.data as any) || []
     }
@@ -292,8 +299,12 @@ const loadConversations = async () => {
 
 
 const handleSendMessage = async (message: string) => {
+  if (!userId.value) {
+    ElMessage.error('请先登录')
+    return
+  }
   try {
-    await chatStore.sendMessage(userId, message, {
+    await chatStore.sendMessage(userId.value, message, {
       fitness_goal: 'general',
       experience_level: 'beginner',
       enable_memory: enableMemory.value
@@ -347,7 +358,12 @@ const speakText = (text: string) => {
 }
 
 // Load settings on mount
-onMounted(() => {
+onMounted(async () => {
+  // 先加载用户信息
+  if (!userStore.user) {
+    await userStore.loadUser()
+  }
+  
   const savedSettings = localStorage.getItem('chat_settings')
   if (savedSettings) {
     try {
@@ -362,8 +378,8 @@ onMounted(() => {
   
   // Hydrate existing conversation if any
   chatStore.hydrate()
-  if (!chatStore.currentConversation) {
-    chatStore.startNewConversation(userId)
+  if (!chatStore.currentConversation && userId.value) {
+    chatStore.startNewConversation(userId.value)
   }
   loadConversations()
 })

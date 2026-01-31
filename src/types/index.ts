@@ -7,10 +7,9 @@ export interface User {
   experience_level?: 'beginner' | 'intermediate' | 'advanced'
   created_at?: string
   updated_at?: string
+  last_login_at?: string
   avatar?: string
   fitnessLevel?: 'beginner' | 'intermediate' | 'advanced'
-  createdAt?: string
-  lastLoginAt?: string
   height?: number
   weight?: number
   age?: number

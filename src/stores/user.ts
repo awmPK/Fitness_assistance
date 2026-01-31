@@ -7,11 +7,24 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
 
   const loadUser = async () => {
-    const uid = localStorage.getItem('user_id') || 'fitness_user_123'
-    const res = await userApi.getUser(uid)
-    if (res.success) {
-      user.value = res.data as unknown as User
-      localStorage.setItem('user_id', user.value.user_id)
+    // 使用 JWT token 获取当前用户信息
+    const token = localStorage.getItem('token')
+    if (!token) {
+      user.value = null
+      return
+    }
+    
+    try {
+      const res = await userApi.getCurrentUser()
+      if (res.success) {
+        user.value = res.data as unknown as User
+        localStorage.setItem('user_id', user.value.user_id)
+      }
+    } catch (error) {
+      // Token 无效，清除登录状态
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
+      user.value = null
     }
   }
 
@@ -38,8 +51,10 @@ export const useUserStore = defineStore('user', () => {
     if (res.success) {
       const { user: u, token } = res.data as any
       localStorage.setItem('token', token)
-      user.value = u
       localStorage.setItem('user_id', u.user_id)
+      user.value = u
+    } else {
+      throw new Error(res.message || '登录失败')
     }
   }
 
@@ -48,14 +63,17 @@ export const useUserStore = defineStore('user', () => {
     if (res.success) {
       const { user: u, token } = res.data as any
       localStorage.setItem('token', token)
-      user.value = u
       localStorage.setItem('user_id', u.user_id)
+      user.value = u
+    } else {
+      throw new Error(res.message || '注册失败')
     }
   }
 
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user_id')
+    localStorage.removeItem('current_conversation_id')
     user.value = null
   }
 
